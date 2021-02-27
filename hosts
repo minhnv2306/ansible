@@ -1,3 +1,5 @@
+# add it to /etc/ansible/hosts
+
 [testservers]
 web1
 web2

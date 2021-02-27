@@ -1,0 +1,36 @@
+---
+- hosts: testservers
+  remote_user: ec2-user
+  become: yes # Fix 'You need to be root to perform this command.' for ec2-user
+
+  tasks:
+    - name: Installing Apache
+      # become: yes # You can place it in here for each task 
+      yum: 
+        name: httpd
+        state: installed
+    - name: Enabling httpd service and start the service
+      service: 
+        name: httpd
+        enabled: yes
+        state: started
+    - name: Installing PHP
+      yum:
+        name:
+          - php
+          # - php-mysql
+        state: latest
+    - name: Download example page
+      shell: |
+        cd /var/www/html
+        wget wget https://us-west-2-aws-training.s3.amazonaws.com/awsu-spl/spl03-working-elb/static/examplefiles-elb.zip
+        unzip examplefiles-elb.zip
+        service httpd restart
+
+# Reference:
+# Github
+# - https://github.com/shazforiot/Lampstack-Ansible-Playbook/blob/main/lampstack.yml
+# - https://github.com/ansible/ansible-examples
+
+# Youtube
+# - https://www.youtube.com/watch?v=3R7bzVGPKZU&list=PLVx1qovxj-al0Knm1A0eEXfGyd5kCi16p&index=4
